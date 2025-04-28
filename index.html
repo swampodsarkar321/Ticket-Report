@@ -452,6 +452,42 @@
   </div>
 
   <script>
+    // Load saved data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSavedData();
+    });
+
+    function saveData() {
+      const formData = {
+        userName: document.getElementById('userName').value,
+        adminId: document.getElementById('adminId').value,
+        previousAssigned: document.getElementById('previousAssigned').value,
+        assignedTicket: document.getElementById('assignedTicket').value,
+        resolvedTicket: document.getElementById('resolvedTicket').value,
+        ticketTime: document.getElementById('ticketTime').value
+      };
+      localStorage.setItem('ticketAnalyticsData', JSON.stringify(formData));
+    }
+
+    function loadSavedData() {
+      const savedData = localStorage.getItem('ticketAnalyticsData');
+      if (savedData) {
+        const formData = JSON.parse(savedData);
+        document.getElementById('userName').value = formData.userName || '';
+        document.getElementById('adminId').value = formData.adminId || '';
+        document.getElementById('previousAssigned').value = formData.previousAssigned || '';
+        document.getElementById('assignedTicket').value = formData.assignedTicket || '';
+        document.getElementById('resolvedTicket').value = formData.resolvedTicket || '';
+        document.getElementById('ticketTime').value = formData.ticketTime || '';
+        
+        // If there's saved data, show the results section
+        if (formData.userName || formData.previousAssigned || formData.assignedTicket || 
+            formData.resolvedTicket || formData.ticketTime) {
+          calculateResults();
+        }
+      }
+    }
+
     function calculateResults() {
       // Get input values
       const userName = document.getElementById('userName').value || 'Unnamed User';
@@ -460,6 +496,9 @@
       const assignedToday = parseInt(document.getElementById('assignedTicket').value) || 0;
       const resolvedToday = parseInt(document.getElementById('resolvedTicket').value) || 0;
       const ticketTime = parseInt(document.getElementById('ticketTime').value) || 0;
+
+      // Save data to localStorage
+      saveData();
 
       // Calculations
       const totalAssigned = previousAssigned + assignedToday;
@@ -526,6 +565,9 @@
       document.getElementById('assignedTicket').value = '';
       document.getElementById('resolvedTicket').value = '';
       document.getElementById('ticketTime').value = '';
+
+      // Clear localStorage
+      localStorage.removeItem('ticketAnalyticsData');
 
       // Hide results section
       document.getElementById('results').style.display = 'none';
