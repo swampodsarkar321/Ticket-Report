@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Premium Ticket Analytics Dashboard</title>
+  <title>Ticket Analytics Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -323,7 +323,7 @@
     <div class="card">
       <div class="header">
         <h1><i class="fas fa-ticket-alt"></i> Ticket Analytics Dashboard</h1>
-        <p>Made By Swampod Sarkar</p>
+        <p>Track and analyze ticket performance metrics</p>
       </div>
 
       <div class="input-grid">
@@ -336,19 +336,19 @@
           <input type="text" id="adminId" placeholder="Enter ID">
         </div>
         <div class="input-group">
-          <label for="previousAssigned"><i class="fas fa-history"></i> Previous Tickets</label>
+          <label for="previousAssigned"><i class="fas fa-history"></i> Previous Assigned Tickets</label>
           <input type="number" id="previousAssigned" placeholder="0" min="0">
         </div>
         <div class="input-group">
-          <label for="assignedTicket"><i class="fas fa-plus-circle"></i> Assigned Today</label>
+          <label for="assignedTicket"><i class="fas fa-plus-circle"></i> Tickets Assigned Today</label>
           <input type="number" id="assignedTicket" placeholder="0" min="0">
         </div>
         <div class="input-group">
-          <label for="resolvedTicket"><i class="fas fa-check-circle"></i> Resolved Today</label>
+          <label for="resolvedTicket"><i class="fas fa-check-circle"></i> Tickets Resolved Today</label>
           <input type="number" id="resolvedTicket" placeholder="0" min="0">
         </div>
         <div class="input-group">
-          <label for="ticketTime"><i class="fas fa-clock"></i> Total Time (Minutes)</label>
+          <label for="ticketTime"><i class="fas fa-clock"></i> Total Ticket Time (Minutes)</label>
           <input type="number" id="ticketTime" placeholder="0" min="0">
         </div>
       </div>
@@ -380,13 +380,6 @@
       </div>
 
       <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-ticket-alt"></i>
-          </div>
-          <div class="stat-value" id="totalTickets">0</div>
-          <div class="stat-label">Total Tickets</div>
-        </div>
         <div class="stat-card">
           <div class="stat-icon">
             <i class="fas fa-plus"></i>
@@ -425,7 +418,6 @@
               <th>Name</th>
               <th>Assigned</th>
               <th>Resolved</th>
-              <th>Total</th>
               <th>Closed</th>
               <th>Pending</th>
               <th>Time (Min)</th>
@@ -438,7 +430,6 @@
               <td id="resultName">-</td>
               <td id="resultAssigned">0</td>
               <td id="resultResolved">0</td>
-              <td id="resultTotal">0</td>
               <td id="resultClosed">0</td>
               <td id="resultPending">0</td>
               <td id="resultTime">0</td>
@@ -449,7 +440,6 @@
               <td>Total</td>
               <td id="resultTotalAssigned">0</td>
               <td id="resultTotalResolved">0</td>
-              <td id="resultGrandTotal">0</td>
               <td id="resultTotalClosed">0</td>
               <td id="resultTotalPending">0</td>
               <td id="resultTotalTime">0</td>
@@ -473,8 +463,7 @@
 
       // Calculations
       const totalAssigned = previousAssigned + assignedToday;
-      const pendingTickets = totalAssigned - resolvedToday;
-      const totalTickets = totalAssigned + resolvedToday;
+      const pendingTickets = totalAssigned - resolvedToday; // (previous + today assigned) - resolved
       
       // Determine status
       let status = '';
@@ -496,7 +485,6 @@
       document.getElementById('displayAdminId').textContent = adminId;
 
       // Update stats cards
-      document.getElementById('totalTickets').textContent = totalTickets;
       document.getElementById('assignedToday').textContent = assignedToday;
       document.getElementById('resolvedToday').textContent = resolvedToday;
       document.getElementById('pendingTickets').textContent = pendingTickets;
@@ -506,7 +494,6 @@
       document.getElementById('resultName').textContent = userName;
       document.getElementById('resultAssigned').textContent = assignedToday;
       document.getElementById('resultResolved').textContent = resolvedToday;
-      document.getElementById('resultTotal').textContent = totalTickets;
       document.getElementById('resultClosed').textContent = resolvedToday;
       document.getElementById('resultPending').textContent = pendingTickets;
       document.getElementById('resultTime').textContent = ticketTime;
@@ -518,7 +505,6 @@
       // Update totals row
       document.getElementById('resultTotalAssigned').textContent = totalAssigned;
       document.getElementById('resultTotalResolved').textContent = resolvedToday;
-      document.getElementById('resultGrandTotal').textContent = totalTickets;
       document.getElementById('resultTotalClosed').textContent = resolvedToday;
       document.getElementById('resultTotalPending').textContent = pendingTickets;
       document.getElementById('resultTotalTime').textContent = ticketTime;
@@ -544,6 +530,14 @@
       // Hide results section
       document.getElementById('results').style.display = 'none';
     }
+
+    // You can pre-load sample data by calling:
+    // document.getElementById('userName').value = 'swampod';
+    // document.getElementById('previousAssigned').value = '200';
+    // document.getElementById('assignedTicket').value = '46';
+    // document.getElementById('resolvedTicket').value = '43';
+    // document.getElementById('ticketTime').value = '50';
+    // calculateResults();
   </script>
 </body>
-</html> 
+</html>
