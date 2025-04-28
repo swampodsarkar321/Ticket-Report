@@ -162,6 +162,14 @@
       font-weight: 700;
     }
 
+    .report-date {
+      font-size: 1rem;
+      color: var(--gray);
+      background: #f8f9fa;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+    }
+
     .user-info {
       display: flex;
       gap: 1.5rem;
@@ -315,6 +323,11 @@
       .user-info {
         flex-direction: column;
       }
+      .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
     }
   </style>
 </head>
@@ -366,6 +379,7 @@
     <div class="card results" id="results">
       <div class="results-header">
         <h2 class="results-title"><i class="fas fa-chart-line"></i> Ticket Analysis Results</h2>
+        <div class="report-date" id="reportDate"></div>
       </div>
 
       <div class="user-info">
@@ -488,6 +502,18 @@
       }
     }
 
+    function formatDate(date) {
+      const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+      return date.toLocaleDateString('en-US', options);
+    }
+
     function calculateResults() {
       // Get input values
       const userName = document.getElementById('userName').value || 'Unnamed User';
@@ -499,6 +525,10 @@
 
       // Save data to localStorage
       saveData();
+
+      // Set current date and time
+      const now = new Date();
+      document.getElementById('reportDate').textContent = formatDate(now);
 
       // Calculations
       const totalAssigned = previousAssigned + assignedToday;
