@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ticket Summary Dashboard</title>
+  <title>Ticket Management System</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary: #4361ee;
-      --secondary: #3f37c9;
+      --secondary: #3a0ca3;
       --success: #4cc9f0;
       --warning: #f8961e;
       --danger: #f94144;
       --light: #f8f9fa;
       --dark: #212529;
-      --border-radius: 12px;
+      --gray: #6c757d;
+      --border-radius: 10px;
       --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      --transition: all 0.3s ease;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
     
     * {
@@ -27,7 +29,7 @@
     
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background: #f8fafc;
       margin: 0;
       padding: 20px;
       min-height: 100vh;
@@ -42,7 +44,7 @@
       padding: 30px;
       border-radius: var(--border-radius);
       box-shadow: var(--box-shadow);
-      max-width: 500px;
+      max-width: 550px;
       width: 100%;
       margin: 20px 0;
     }
@@ -52,7 +54,7 @@
       color: white;
       text-align: center;
       border-radius: var(--border-radius);
-      padding: 20px;
+      padding: 25px;
       margin-bottom: 25px;
       position: relative;
       overflow: hidden;
@@ -69,29 +71,41 @@
     }
     
     .header h1 {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
+      font-size: 1.6rem;
+      margin-bottom: 5px;
       font-weight: 600;
     }
     
     .header p {
-      margin: 8px 0;
+      margin: 5px 0;
       font-size: 0.9rem;
       opacity: 0.9;
     }
     
     .user-info {
       display: flex;
-      gap: 10px;
-      margin-top: 15px;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .user-info .input-group {
+      flex: 1;
+      text-align: left;
+    }
+    
+    .user-info label {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.8rem;
+      margin-bottom: 5px;
     }
     
     .user-info input {
-      flex: 1;
+      width: 100%;
       background: rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: white;
-      text-align: center;
+      padding: 10px 15px;
+      border-radius: var(--border-radius);
     }
     
     .user-info input::placeholder {
@@ -116,32 +130,40 @@
       font-weight: 500;
       margin-bottom: 8px;
       display: block;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--dark);
     }
     
     input {
       padding: 12px 15px;
-      border: 2px solid #e9ecef;
+      border: 1px solid #e2e8f0;
       border-radius: var(--border-radius);
       width: 100%;
       font-size: 1rem;
       transition: var(--transition);
+      background: #f8fafc;
     }
     
     input:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+      background: white;
     }
     
     input[type="number"] {
       text-align: center;
     }
     
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
     button {
       padding: 14px;
-      width: 100%;
+      flex: 1;
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: white;
       border: none;
@@ -149,18 +171,32 @@
       cursor: pointer;
       font-weight: 600;
       font-size: 1rem;
-      margin-top: 10px;
       transition: var(--transition);
-      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
     }
     
     button:active {
       transform: translateY(0);
+    }
+    
+    button.secondary {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      box-shadow: none;
+    }
+    
+    button.secondary:hover {
+      background: #f8f9fa;
     }
     
     .stats-container {
@@ -168,20 +204,21 @@
     }
     
     .stat-card {
-      padding: 18px;
+      padding: 18px 20px;
       border-radius: var(--border-radius);
       color: white;
-      font-size: 1.1rem;
+      font-size: 1rem;
       margin-bottom: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       transition: var(--transition);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
     
     .stat-card:hover {
       transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
     }
     
     .ticket-time { 
@@ -198,6 +235,12 @@
     
     .pending { 
       background: linear-gradient(135deg, var(--danger) 0%, #f3722c 100%);
+    }
+    
+    .stat-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     
     .stat-value {
@@ -226,19 +269,31 @@
       background: #f8f9fa;
       border-radius: var(--border-radius);
       padding: 15px;
-      margin-top: 20px;
+      margin-bottom: 20px;
       font-size: 0.9rem;
+      border: 1px solid #e2e8f0;
     }
     
     .report-info p {
       margin: 5px 0;
+      display: flex;
+    }
+    
+    .report-info strong {
+      min-width: 80px;
+      display: inline-block;
+      color: var(--gray);
     }
     
     .footer {
       text-align: center;
       margin-top: 20px;
-      color: #6c757d;
+      color: var(--gray);
       font-size: 0.8rem;
+    }
+    
+    .icon {
+      font-size: 1.1rem;
     }
     
     @media (max-width: 480px) {
@@ -253,6 +308,11 @@
       
       .user-info {
         flex-direction: column;
+        gap: 10px;
+      }
+      
+      .btn-group {
+        flex-direction: column;
       }
     }
   </style>
@@ -260,89 +320,155 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Ticket Summary Dashboard</h1>
+      <h1><i class="fas fa-ticket-alt icon"></i> Ticket Management</h1>
       <p id="todayDate"></p>
       <div class="user-info">
-        <input type="text" id="name" placeholder="Your Name" />
-        <input type="text" id="adminId" placeholder="Admin ID" />
+        <div class="input-group">
+          <label for="name"> Name</label>
+          <input type="text" id="name" placeholder="Enter your name" />
+        </div>
+        <div class="input-group">
+          <label for="adminId">Admin ID</label>
+          <input type="text" id="adminId" placeholder="Enter ID" />
+        </div>
       </div>
     </div>
 
     <div class="input-group">
       <div class="input-row">
         <div class="input-col">
-          <label for="assignedStart">Assigned Start</label>
+          <label for="assignedStart"><i class="fas fa-inbox icon"></i> Assigned Start</label>
           <input type="number" id="assignedStart" placeholder="0" />
         </div>
         <div class="input-col">
-          <label for="assignedEnd">Assigned End</label>
+          <label for="assignedEnd"><i class="fas fa-inbox icon"></i> Assigned End</label>
           <input type="number" id="assignedEnd" placeholder="0" />
         </div>
       </div>
       
       <div class="input-row">
         <div class="input-col">
-          <label for="closedStart">Closed Start</label>
+          <label for="closedStart"><i class="fas fa-check-circle icon"></i> Closed Start</label>
           <input type="number" id="closedStart" placeholder="0" />
         </div>
         <div class="input-col">
-          <label for="closedEnd">Closed End</label>
+          <label for="closedEnd"><i class="fas fa-check-circle icon"></i> Closed End</label>
           <input type="number" id="closedEnd" placeholder="0" />
         </div>
       </div>
       
-      <label for="ticketTime">Average Ticket Time (minutes)</label>
+      <label for="ticketTime"><i class="fas fa-clock icon"></i> Average Resolution Time (minutes)</label>
       <input type="number" id="ticketTime" value="50" />
     </div>
 
-    <button onclick="generateReport()">Generate Report</button>
+    <div class="btn-group">
+      <button onclick="generateReport()">
+        <i class="fas fa-chart-bar"></i> Generate Report
+      </button>
+      <button class="secondary" onclick="clearData()">
+        <i class="fas fa-trash-alt"></i> Clear
+      </button>
+    </div>
 
     <div class="stats-container">
       <div class="report-info" id="userInfoDisplay">
         <p><strong>Name:</strong> <span id="displayName">-</span></p>
         <p><strong>Admin ID:</strong> <span id="displayAdminId">-</span></p>
+        <p><strong>Date:</strong> <span id="displayDate">-</span></p>
       </div>
       
       <div class="stat-card ticket-time">
-        <span>Ticket Time</span>
+        <span class="stat-label"><i class="fas fa-clock"></i> Resolution Time</span>
         <span class="stat-value" id="ticketTimeDisplay">0 mins</span>
       </div>
       <div class="stat-card assigned">
-        <span>Total Assigned</span>
+        <span class="stat-label"><i class="fas fa-inbox"></i> Assigned</span>
         <span class="stat-value" id="assignedDisplay">0</span>
       </div>
       <div class="stat-card closed">
-        <span>Total Closed</span>
+        <span class="stat-label"><i class="fas fa-check-circle"></i> Closed</span>
         <span class="stat-value" id="closedDisplay">0</span>
       </div>
       <div class="stat-card pending">
-        <span>Pending Tickets</span>
+        <span class="stat-label"><i class="fas fa-hourglass-half"></i> Pending</span>
         <input type="number" class="pending-input" id="pendingEditable" value="0" readonly />
       </div>
     </div>
   </div>
 
   <div class="footer">
-    Ticket Summary Dashboard &copy; <span id="currentYear"></span>
+    Ticket Management System &copy; <span id="currentYear"></span>
   </div>
 
   <script>
+    // Load saved data from localStorage
+    function loadSavedData() {
+      const savedData = localStorage.getItem('ticketData');
+      if (savedData) {
+        const data = JSON.parse(savedData);
+        
+        // Fill form fields
+        document.getElementById("name").value = data.name || "";
+        document.getElementById("adminId").value = data.adminId || "";
+        document.getElementById("assignedStart").value = data.assignedStart || "";
+        document.getElementById("assignedEnd").value = data.assignedEnd || "";
+        document.getElementById("closedStart").value = data.closedStart || "";
+        document.getElementById("closedEnd").value = data.closedEnd || "";
+        document.getElementById("ticketTime").value = data.ticketTime || "50";
+        
+        // Display saved report if exists
+        if (data.reportGenerated) {
+          displayReport(data);
+        }
+      }
+    }
+    
+    // Display report from data
+    function displayReport(data) {
+      document.getElementById("displayName").innerText = data.name || "Not provided";
+      document.getElementById("displayAdminId").innerText = data.adminId || "Not provided";
+      document.getElementById("displayDate").innerText = data.currentDate || new Date().toLocaleDateString();
+      document.getElementById("ticketTimeDisplay").innerText = `${data.ticketTime || 0} mins`;
+      document.getElementById("assignedDisplay").innerText = data.totalAssigned || 0;
+      document.getElementById("closedDisplay").innerText = data.totalClosed || 0;
+      document.getElementById("pendingEditable").value = data.pending || 0;
+    }
+    
+    // Save data to localStorage
+    function saveData(data) {
+      localStorage.setItem('ticketData', JSON.stringify(data));
+    }
+    
+    // Clear all data
+    function clearData() {
+      if (confirm("Are you sure you want to clear all data?")) {
+        localStorage.removeItem('ticketData');
+        location.reload();
+      }
+    }
+    
     // Set current date and year
     const today = new Date();
-    document.getElementById("todayDate").innerText = today.toLocaleDateString('en-US', { 
+    const currentDate = today.toLocaleDateString('en-US', { 
       weekday: 'long', 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
     });
+    
+    document.getElementById("todayDate").innerText = currentDate;
     document.getElementById("currentYear").innerText = today.getFullYear();
+    document.getElementById("displayDate").innerText = currentDate;
     
     // Focus on name field initially
     document.getElementById("name").focus();
+    
+    // Load any saved data
+    window.addEventListener('load', loadSavedData);
 
     function generateReport() {
-      const name = document.getElementById("name").value || "Not provided";
-      const adminId = document.getElementById("adminId").value || "Not provided";
+      const name = document.getElementById("name").value.trim();
+      const adminId = document.getElementById("adminId").value.trim();
       const assignedStart = parseInt(document.getElementById("assignedStart").value) || 0;
       const assignedEnd = parseInt(document.getElementById("assignedEnd").value) || 0;
       const closedStart = parseInt(document.getElementById("closedStart").value) || 0;
@@ -352,24 +478,38 @@
       const totalAssigned = assignedStart - assignedEnd;
       const totalClosed = closedStart - closedEnd;
       const pending = totalAssigned - totalClosed;
-
-      // Display user info
-      document.getElementById("displayName").innerText = name;
-      document.getElementById("displayAdminId").innerText = adminId;
-
-      // Display stats
-      document.getElementById("ticketTimeDisplay").innerText = `${ticketTime} mins`;
-      document.getElementById("assignedDisplay").innerText = totalAssigned;
-      document.getElementById("closedDisplay").innerText = totalClosed;
-      document.getElementById("pendingEditable").value = pending;
+      
+      // Prepare data to save
+      const reportData = {
+        name,
+        adminId,
+        assignedStart,
+        assignedEnd,
+        closedStart,
+        closedEnd,
+        ticketTime,
+        totalAssigned,
+        totalClosed,
+        pending,
+        currentDate,
+        reportGenerated: true
+      };
+      
+      // Save to localStorage
+      saveData(reportData);
+      
+      // Display report
+      displayReport(reportData);
       
       // Add animation to stat cards
       const statCards = document.querySelectorAll('.stat-card');
-      statCards.forEach(card => {
-        card.style.transform = 'scale(1.05)';
+      statCards.forEach((card, index) => {
         setTimeout(() => {
-          card.style.transform = 'scale(1)';
-        }, 300);
+          card.style.transform = 'scale(1.05)';
+          setTimeout(() => {
+            card.style.transform = 'scale(1)';
+          }, 300);
+        }, index * 100);
       });
     }
     
@@ -381,6 +521,12 @@
     
     document.getElementById("pendingEditable").addEventListener('blur', function() {
       this.readOnly = true;
+      // Update saved data when pending is manually changed
+      const savedData = JSON.parse(localStorage.getItem('ticketData') || '{}');
+      if (savedData) {
+        savedData.pending = parseInt(this.value) || 0;
+        saveData(savedData);
+      }
     });
     
     // Calculate on Enter key press
