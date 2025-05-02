@@ -1,615 +1,394 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ticket Analytics Dashboard</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ticket Summary Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #4361ee;
       --secondary: #3f37c9;
       --success: #4cc9f0;
-      --danger: #f72585;
       --warning: #f8961e;
+      --danger: #f94144;
       --light: #f8f9fa;
       --dark: #212529;
-      --gray: #6c757d;
       --border-radius: 12px;
-      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       --transition: all 0.3s ease;
     }
-
+    
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-
+    
     body {
-      background-color: #f5f7ff;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       color: var(--dark);
-      line-height: 1.6;
     }
-
-    .dashboard {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
-    .card {
-      background: white;
+    
+    .container {
+      background: #ffffff;
+      padding: 30px;
       border-radius: var(--border-radius);
       box-shadow: var(--box-shadow);
-      padding: 2rem;
-      margin-bottom: 2rem;
-      transition: var(--transition);
+      max-width: 500px;
+      width: 100%;
+      margin: 20px 0;
     }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-    }
-
+    
     .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
       text-align: center;
-      margin-bottom: 2rem;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 25px;
+      position: relative;
+      overflow: hidden;
     }
-
+    
+    .header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
     .header h1 {
-      font-size: 2.5rem;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-
-    .header p {
-      color: var(--gray);
-      font-size: 1.1rem;
-    }
-
-    .input-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .input-group {
-      margin-bottom: 1rem;
-    }
-
-    .input-group label {
-      display: block;
-      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
       font-weight: 600;
+    }
+    
+    .header p {
+      margin: 8px 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .user-info {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .user-info input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      text-align: center;
+    }
+    
+    .user-info input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    .input-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .input-col {
+      flex: 1;
+    }
+    
+    label {
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: block;
+      font-size: 0.9rem;
       color: var(--dark);
     }
-
-    .input-group input {
-      width: 100%;
-      padding: 0.8rem 1rem;
+    
+    input {
+      padding: 12px 15px;
       border: 2px solid #e9ecef;
       border-radius: var(--border-radius);
+      width: 100%;
       font-size: 1rem;
       transition: var(--transition);
     }
-
-    .input-group input:focus {
+    
+    input:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
     }
-
-    .btn-group {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1.5rem;
+    
+    input[type="number"] {
+      text-align: center;
     }
-
-    .btn {
-      padding: 0.8rem 1.8rem;
-      border: none;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn-primary {
-      background: var(--primary);
+    
+    button {
+      padding: 14px;
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-top: 10px;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
     }
-
-    .btn-primary:hover {
-      background: var(--secondary);
+    
+    button:hover {
       transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
     }
-
-    .btn-secondary {
-      background: var(--light);
-      color: var(--dark);
-      border: 1px solid #dee2e6;
+    
+    button:active {
+      transform: translateY(0);
     }
-
-    .btn-secondary:hover {
-      background: #e9ecef;
+    
+    .stats-container {
+      margin-top: 25px;
     }
-
-    .results {
-      display: none;
-    }
-
-    .results-header {
+    
+    .stat-card {
+      padding: 18px;
+      border-radius: var(--border-radius);
+      color: white;
+      font-size: 1.1rem;
+      margin-bottom: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #e9ecef;
-    }
-
-    .results-title {
-      font-size: 1.8rem;
-      color: var(--primary);
-      font-weight: 700;
-    }
-
-    .report-date {
-      font-size: 1rem;
-      color: var(--gray);
-      background: #f8f9fa;
-      padding: 0.5rem 1rem;
-      border-radius: 50px;
-    }
-
-    .user-info {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .info-card {
-      background: var(--light);
-      padding: 1.2rem;
-      border-radius: var(--border-radius);
-      flex: 1;
-    }
-
-    .info-card h3 {
-      font-size: 0.9rem;
-      color: var(--gray);
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .info-card p {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--dark);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-card {
-      padding: 1.5rem;
-      border-radius: var(--border-radius);
-      background: white;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-      text-align: center;
       transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
-
+    
     .stat-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-3px);
     }
-
-    .stat-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-      font-size: 1.2rem;
+    
+    .ticket-time { 
+      background: linear-gradient(135deg, #7209b7 0%, #560bad 100%);
     }
-
-    .stat-card:nth-child(1) .stat-icon {
-      background: rgba(76, 201, 240, 0.1);
-      color: var(--success);
+    
+    .assigned { 
+      background: linear-gradient(135deg, var(--warning) 0%, #f3722c 100%);
     }
-    .stat-card:nth-child(2) .stat-icon {
-      background: rgba(67, 97, 238, 0.1);
-      color: var(--primary);
+    
+    .closed { 
+      background: linear-gradient(135deg, var(--success) 0%, #4895ef 100%);
     }
-    .stat-card:nth-child(3) .stat-icon {
-      background: rgba(248, 150, 30, 0.1);
-      color: var(--warning);
+    
+    .pending { 
+      background: linear-gradient(135deg, var(--danger) 0%, #f3722c 100%);
     }
-    .stat-card:nth-child(4) .stat-icon {
-      background: rgba(247, 37, 133, 0.1);
-      color: var(--danger);
-    }
-    .stat-card:nth-child(5) .stat-icon {
-      background: rgba(108, 117, 125, 0.1);
-      color: var(--gray);
-    }
-
+    
     .stat-value {
-      font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--dark);
+      font-size: 1.3rem;
     }
-
-    .stat-label {
-      font-size: 0.9rem;
-      color: var(--gray);
-    }
-
-    .results-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 2rem;
-    }
-
-    .results-table th {
-      background: var(--primary);
+    
+    .pending-input {
+      width: 80px;
+      padding: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
       color: white;
-      padding: 1rem;
-      text-align: left;
+      font-weight: bold;
+      font-size: 1rem;
+      text-align: center;
+      border-radius: 6px;
     }
-
-    .results-table td {
-      padding: 1rem;
-      border-bottom: 1px solid #e9ecef;
+    
+    .pending-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.3);
     }
-
-    .results-table tr:nth-child(even) {
+    
+    .report-info {
       background: #f8f9fa;
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 0.9rem;
     }
-
-    .results-table tr:last-child td {
-      border-bottom: none;
+    
+    .report-info p {
+      margin: 5px 0;
     }
-
-    .total-row {
-      font-weight: 700;
-      background: rgba(67, 97, 238, 0.05) !important;
+    
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #6c757d;
+      font-size: 0.8rem;
     }
-
-    .badge {
-      display: inline-block;
-      padding: 0.35rem 0.75rem;
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
-
-    .badge-success {
-      background: rgba(76, 201, 240, 0.1);
-      color: #4cc9f0;
-    }
-    .badge-warning {
-      background: rgba(248, 150, 30, 0.1);
-      color: #f8961e;
-    }
-    .badge-danger {
-      background: rgba(247, 37, 133, 0.1);
-      color: #f72585;
-    }
-
-    @media (max-width: 768px) {
-      .input-grid {
-        grid-template-columns: 1fr;
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
       }
-      .stats-grid {
-        grid-template-columns: 1fr 1fr;
+      
+      .input-row {
+        flex-direction: column;
+        gap: 10px;
       }
+      
       .user-info {
         flex-direction: column;
-      }
-      .results-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="dashboard">
-    <div class="card">
-      <div class="header">
-        <h1><i class="fas fa-ticket-alt"></i> Ticket Analytics Dashboard</h1>
-        <p>Made By Swampod Sarkar</p>
-      </div>
-
-      <div class="input-grid">
-        <div class="input-group">
-          <label for="userName"><i class="fas fa-user"></i> User Name</label>
-          <input type="text" id="userName" placeholder="Enter name">
-        </div>
-        <div class="input-group">
-          <label for="adminId"><i class="fas fa-id-card"></i> Admin ID</label>
-          <input type="text" id="adminId" placeholder="Enter ID">
-        </div>
-        <div class="input-group">
-          <label for="previousAssigned"><i class="fas fa-history"></i> Previous Assigned Tickets</label>
-          <input type="number" id="previousAssigned" placeholder="0" min="0">
-        </div>
-        <div class="input-group">
-          <label for="assignedTicket"><i class="fas fa-plus-circle"></i> Tickets Assigned Today</label>
-          <input type="number" id="assignedTicket" placeholder="0" min="0">
-        </div>
-        <div class="input-group">
-          <label for="resolvedTicket"><i class="fas fa-check-circle"></i> Tickets Resolved Today</label>
-          <input type="number" id="resolvedTicket" placeholder="0" min="0">
-        </div>
-        <div class="input-group">
-          <label for="ticketTime"><i class="fas fa-clock"></i> Total Ticket Time (Minutes)</label>
-          <input type="number" id="ticketTime" placeholder="0" min="0">
-        </div>
-      </div>
-
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="calculateResults()">
-          <i class="fas fa-calculator"></i> Generate Report
-        </button>
-        <button class="btn btn-secondary" onclick="resetForm()">
-          <i class="fas fa-redo"></i> Reset
-        </button>
+  <div class="container">
+    <div class="header">
+      <h1>Ticket Summary Dashboard</h1>
+      <p id="todayDate"></p>
+      <div class="user-info">
+        <input type="text" id="name" placeholder="Your Name" />
+        <input type="text" id="adminId" placeholder="Admin ID" />
       </div>
     </div>
 
-    <div class="card results" id="results">
-      <div class="results-header">
-        <h2 class="results-title"><i class="fas fa-chart-line"></i> Ticket Analysis Results</h2>
-        <div class="report-date" id="reportDate"></div>
-      </div>
-
-      <div class="user-info">
-        <div class="info-card">
-          <h3>Name</h3>
-          <p id="displayName">-</p>
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-col">
+          <label for="assignedStart">Assigned Start</label>
+          <input type="number" id="assignedStart" placeholder="0" />
         </div>
-        <div class="info-card">
-          <h3>Admin ID</h3>
-          <p id="displayAdminId">-</p>
+        <div class="input-col">
+          <label for="assignedEnd">Assigned End</label>
+          <input type="number" id="assignedEnd" placeholder="0" />
         </div>
       </div>
-
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-plus"></i>
-          </div>
-          <div class="stat-value" id="assignedToday">0</div>
-          <div class="stat-label">Assigned Today</div>
+      
+      <div class="input-row">
+        <div class="input-col">
+          <label for="closedStart">Closed Start</label>
+          <input type="number" id="closedStart" placeholder="0" />
         </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-check"></i>
-          </div>
-          <div class="stat-value" id="resolvedToday">0</div>
-          <div class="stat-label">Resolved Today</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-clock"></i>
-          </div>
-          <div class="stat-value" id="pendingTickets">0</div>
-          <div class="stat-label">Pending Tickets</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-stopwatch"></i>
-          </div>
-          <div class="stat-value" id="totalTime">0</div>
-          <div class="stat-label">Total Time (Min)</div>
+        <div class="input-col">
+          <label for="closedEnd">Closed End</label>
+          <input type="number" id="closedEnd" placeholder="0" />
         </div>
       </div>
+      
+      <label for="ticketTime">Average Ticket Time (minutes)</label>
+      <input type="number" id="ticketTime" value="50" />
+    </div>
 
-      <div class="table-container">
-        <table class="results-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Assigned</th>
-              <th>Resolved</th>
-              <th>Closed</th>
-              <th>Pending</th>
-              <th>Time (Min)</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td id="resultName">-</td>
-              <td id="resultAssigned">0</td>
-              <td id="resultResolved">0</td>
-              <td id="resultClosed">0</td>
-              <td id="resultPending">0</td>
-              <td id="resultTime">0</td>
-              <td><span class="badge" id="resultStatus">-</span></td>
-            </tr>
-            <tr class="total-row">
-              <td>2</td>
-              <td>Total</td>
-              <td id="resultTotalAssigned">0</td>
-              <td id="resultTotalResolved">0</td>
-              <td id="resultTotalClosed">0</td>
-              <td id="resultTotalPending">0</td>
-              <td id="resultTotalTime">0</td>
-              <td>-</td>
-            </tr>
-          </tbody>
-        </table>
+    <button onclick="generateReport()">Generate Report</button>
+
+    <div class="stats-container">
+      <div class="report-info" id="userInfoDisplay">
+        <p><strong>Name:</strong> <span id="displayName">-</span></p>
+        <p><strong>Admin ID:</strong> <span id="displayAdminId">-</span></p>
+      </div>
+      
+      <div class="stat-card ticket-time">
+        <span>Ticket Time</span>
+        <span class="stat-value" id="ticketTimeDisplay">0 mins</span>
+      </div>
+      <div class="stat-card assigned">
+        <span>Total Assigned</span>
+        <span class="stat-value" id="assignedDisplay">0</span>
+      </div>
+      <div class="stat-card closed">
+        <span>Total Closed</span>
+        <span class="stat-value" id="closedDisplay">0</span>
+      </div>
+      <div class="stat-card pending">
+        <span>Pending Tickets</span>
+        <input type="number" class="pending-input" id="pendingEditable" value="0" readonly />
       </div>
     </div>
   </div>
 
+  <div class="footer">
+    Ticket Summary Dashboard &copy; <span id="currentYear"></span>
+  </div>
+
   <script>
-    // Load saved data when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      loadSavedData();
+    // Set current date and year
+    const today = new Date();
+    document.getElementById("todayDate").innerText = today.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
     });
+    document.getElementById("currentYear").innerText = today.getFullYear();
+    
+    // Focus on name field initially
+    document.getElementById("name").focus();
 
-    function saveData() {
-      const formData = {
-        userName: document.getElementById('userName').value,
-        adminId: document.getElementById('adminId').value,
-        previousAssigned: document.getElementById('previousAssigned').value,
-        assignedTicket: document.getElementById('assignedTicket').value,
-        resolvedTicket: document.getElementById('resolvedTicket').value,
-        ticketTime: document.getElementById('ticketTime').value
-      };
-      localStorage.setItem('ticketAnalyticsData', JSON.stringify(formData));
-    }
+    function generateReport() {
+      const name = document.getElementById("name").value || "Not provided";
+      const adminId = document.getElementById("adminId").value || "Not provided";
+      const assignedStart = parseInt(document.getElementById("assignedStart").value) || 0;
+      const assignedEnd = parseInt(document.getElementById("assignedEnd").value) || 0;
+      const closedStart = parseInt(document.getElementById("closedStart").value) || 0;
+      const closedEnd = parseInt(document.getElementById("closedEnd").value) || 0;
+      const ticketTime = parseInt(document.getElementById("ticketTime").value) || 0;
 
-    function loadSavedData() {
-      const savedData = localStorage.getItem('ticketAnalyticsData');
-      if (savedData) {
-        const formData = JSON.parse(savedData);
-        document.getElementById('userName').value = formData.userName || '';
-        document.getElementById('adminId').value = formData.adminId || '';
-        document.getElementById('previousAssigned').value = formData.previousAssigned || '';
-        document.getElementById('assignedTicket').value = formData.assignedTicket || '';
-        document.getElementById('resolvedTicket').value = formData.resolvedTicket || '';
-        document.getElementById('ticketTime').value = formData.ticketTime || '';
-        
-        // If there's saved data, show the results section
-        if (formData.userName || formData.previousAssigned || formData.assignedTicket || 
-            formData.resolvedTicket || formData.ticketTime) {
-          calculateResults();
-        }
-      }
-    }
+      const totalAssigned = assignedStart - assignedEnd;
+      const totalClosed = closedStart - closedEnd;
+      const pending = totalAssigned - totalClosed;
 
-    function formatDate(date) {
-      const options = { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      };
-      return date.toLocaleDateString('en-US', options);
-    }
+      // Display user info
+      document.getElementById("displayName").innerText = name;
+      document.getElementById("displayAdminId").innerText = adminId;
 
-    function calculateResults() {
-      // Get input values
-      const userName = document.getElementById('userName').value || 'Unnamed User';
-      const adminId = document.getElementById('adminId').value || 'N/A';
-      const previousAssigned = parseInt(document.getElementById('previousAssigned').value) || 0;
-      const assignedToday = parseInt(document.getElementById('assignedTicket').value) || 0;
-      const resolvedToday = parseInt(document.getElementById('resolvedTicket').value) || 0;
-      const ticketTime = parseInt(document.getElementById('ticketTime').value) || 0;
-
-      // Save data to localStorage
-      saveData();
-
-      // Set current date and time
-      const now = new Date();
-      document.getElementById('reportDate').textContent = formatDate(now);
-
-      // Calculations
-      const totalAssigned = previousAssigned + assignedToday;
-      const pendingTickets = totalAssigned - resolvedToday; // (previous + today assigned) - resolved
+      // Display stats
+      document.getElementById("ticketTimeDisplay").innerText = `${ticketTime} mins`;
+      document.getElementById("assignedDisplay").innerText = totalAssigned;
+      document.getElementById("closedDisplay").innerText = totalClosed;
+      document.getElementById("pendingEditable").value = pending;
       
-      // Determine status
-      let status = '';
-      let statusClass = '';
-      
-      if (resolvedToday >= assignedToday) {
-        status = 'Excellent';
-        statusClass = 'badge-success';
-      } else if (resolvedToday >= assignedToday * 0.5) {
-        status = 'Good';
-        statusClass = 'badge-warning';
-      } else {
-        status = 'Needs Attention';
-        statusClass = 'badge-danger';
-      }
-
-      // Update user info
-      document.getElementById('displayName').textContent = userName;
-      document.getElementById('displayAdminId').textContent = adminId;
-
-      // Update stats cards
-      document.getElementById('assignedToday').textContent = assignedToday;
-      document.getElementById('resolvedToday').textContent = resolvedToday;
-      document.getElementById('pendingTickets').textContent = pendingTickets;
-      document.getElementById('totalTime').textContent = ticketTime;
-
-      // Update results table
-      document.getElementById('resultName').textContent = userName;
-      document.getElementById('resultAssigned').textContent = assignedToday;
-      document.getElementById('resultResolved').textContent = resolvedToday;
-      document.getElementById('resultClosed').textContent = resolvedToday;
-      document.getElementById('resultPending').textContent = pendingTickets;
-      document.getElementById('resultTime').textContent = ticketTime;
-      
-      const statusBadge = document.getElementById('resultStatus');
-      statusBadge.textContent = status;
-      statusBadge.className = `badge ${statusClass}`;
-
-      // Update totals row
-      document.getElementById('resultTotalAssigned').textContent = totalAssigned;
-      document.getElementById('resultTotalResolved').textContent = resolvedToday;
-      document.getElementById('resultTotalClosed').textContent = resolvedToday;
-      document.getElementById('resultTotalPending').textContent = pendingTickets;
-      document.getElementById('resultTotalTime').textContent = ticketTime;
-
-      // Show results section
-      document.getElementById('results').style.display = 'block';
-      
-      // Scroll to results
-      document.getElementById('results').scrollIntoView({
-        behavior: 'smooth'
+      // Add animation to stat cards
+      const statCards = document.querySelectorAll('.stat-card');
+      statCards.forEach(card => {
+        card.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          card.style.transform = 'scale(1)';
+        }, 300);
       });
     }
-
-    function resetForm() {
-      // Reset all input fields
-      document.getElementById('userName').value = '';
-      document.getElementById('adminId').value = '';
-      document.getElementById('previousAssigned').value = '';
-      document.getElementById('assignedTicket').value = '';
-      document.getElementById('resolvedTicket').value = '';
-      document.getElementById('ticketTime').value = '';
-
-      // Clear localStorage
-      localStorage.removeItem('ticketAnalyticsData');
-
-      // Hide results section
-      document.getElementById('results').style.display = 'none';
-    }
-
-    // You can pre-load sample data by calling:
-    // document.getElementById('userName').value = 'swampod';
-    // document.getElementById('previousAssigned').value = '200';
-    // document.getElementById('assignedTicket').value = '46';
-    // document.getElementById('resolvedTicket').value = '43';
-    // document.getElementById('ticketTime').value = '50';
-    // calculateResults();
+    
+    // Allow manual editing of pending tickets
+    document.getElementById("pendingEditable").addEventListener('click', function() {
+      this.readOnly = false;
+      this.focus();
+    });
+    
+    document.getElementById("pendingEditable").addEventListener('blur', function() {
+      this.readOnly = true;
+    });
+    
+    // Calculate on Enter key press
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        generateReport();
+      }
+    });
   </script>
 </body>
 </html>
